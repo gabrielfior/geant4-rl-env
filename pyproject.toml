@@ -1,0 +1,16 @@
+[project]
+name = "geant4rl"
+version = "0.0.1"
+description = "RL environments for physics agents: Geant4 tasks with verifiable graders"
+requires-python = ">=3.12,<3.13"
+dependencies = ["geant4_pybind", "numpy"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["geant4rl"]
