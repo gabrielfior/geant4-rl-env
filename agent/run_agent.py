@@ -61,7 +61,27 @@ def main():
     if a.backend == "modal":
         import modal
         llm = modal.Cls.from_name(__import__("os").environ.get("G4RL_APP", "geant4rl-llm"), "LLM")()
-        chat = lambda batch: llm.chat.remote(batch, max_tokens=6000 if a.thinking else 3500, thinking=a.thinking)
+        def trim(msgs, limit=36000):   # keep the prompt inside the 16k-token context: drop the oldest turn pairs
+            msgs = list(msgs)
+            while sum(len(m["content"]) for m in msgs) > limit and len(msgs) > 4:
+                del msgs[2:4]
+            return msgs
+
+        def chat(batch, chunk=33):   # chunked + retried: one failed remote call must not kill the whole run
+            out = []
+            for i in range(0, len(batch), chunk):
+                part = [trim(m) for m in batch[i:i + chunk]]
+                for attempt in range(3):
+                    try:
+                        out += llm.chat.remote(part, max_tokens=6000 if a.thinking else 3500, thinking=a.thinking)
+                        break
+                    except Exception as ex:  # noqa: BLE001
+                        print("modal error, retrying:", str(ex)[:120], flush=True)
+                        time.sleep(10)
+                else:
+                    out += ["[inference error]"] * len(part)
+            return out
+
     else:  # OpenAI-compatible; key/base url come from the environment, never written to disk
         import os
         from openai import OpenAI

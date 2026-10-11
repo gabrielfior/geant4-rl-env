@@ -13,15 +13,15 @@ An LLM agent must **write and run a Geant4 simulation** (`geant4_pybind`) and re
 
 11 tasks in 5 families (**A** write a simulation, **B** debug one, **C** extract a coefficient, **D** design, **E** identify a material), parametrised by seed.
 
-## Results so far (15 turns, example script given, families B-E, 42 episodes each)
+## Results so far (15 turns, example script given)
 
-| Model | Pass rate |
+| Run | Pass rate |
 |---|---|
-| deepseek-v4.1-flash | 30/42 (71%) |
-| qwen3.8-27b, thinking | 15/42 (36%) |
-| qwen3.8-27b, non-thinking | 14/42 (33%) |
+| **All 11 tasks, 99 episodes:** deepseek-v4.1-flash | **66/99 (67%)** |
+| Families B-E, 42 episodes: deepseek-v4.1-flash | 30/42 (71%) |
+| Families B-E, 42 episodes: qwen3.8-27b thinking / non-thinking | 15/42 (36%) / 14/42 (33%) |
 
-Full 11-task run (99 episodes per model) with Qwen3-8B/14B: pending. Details and failure causes: [docs/RESULTS.md](docs/RESULTS.md).
+Qwen3-8B / 14B on the 99-episode set: **not measured**. The Modal vLLM engine crashed repeatedly mid-batch, and I stopped it to save credits. Details and per-task numbers: [docs/RESULTS.md](docs/RESULTS.md).
 
 ## More
 

@@ -19,6 +19,20 @@ Agent loop: up to 15 turns, the model writes one Python script per turn, it runs
 
 Failure causes: most Qwen failures are *no result printed* (21-25 of 42) after turns spent exploring the API; 19% of Qwen thinking replies were empty (reasoning exhausted the token budget). DeepSeek's failures are mostly agents running out of turns, plus one wrong material.
 
-A full 11-task run (3 seeds x 3 samples, 99 episodes per model) for DeepSeek, Qwen3-8B and Qwen3-14B was in progress when this was written; its numbers will be added here.
+**Full set, `deepseek-v4.1-flash`, 11 tasks x 3 seeds x 3 samples = 99 episodes: 66/99 (67%).**
+
+| Task | Pass |
+|---|---|
+| slab_transmission, proton_range, debug_nai | 9/9 each |
+| nai_absorbed_fraction | 8/9 |
+| debug_transmission | 7/9 |
+| nai_min_thickness, range_exponent, unknown_material | 6/9 each |
+| alpha_range | 4/9 |
+| attenuation_coefficient | 2/9 |
+| shield_thickness | 0/9 |
+
+All 33 failures are "no result printed by the last run". To approach 80%, `shield_thickness` and `attenuation_coefficient` need reworking.
+
+Qwen3-8B and 14B (Modal, non-thinking) were **not measured**: the vLLM engine died mid-batch on three attempts, so no episodes were graded.
 
 An earlier Qwen run scored 0/42 because of a bug on our side (Geant4 data paths missing in the sandbox); it is excluded.
